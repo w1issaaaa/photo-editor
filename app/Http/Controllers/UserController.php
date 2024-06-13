@@ -8,23 +8,32 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function register(Request $request){
-        $validated = $request->validate([
-            'email' => 'required|unique:users|max:255',
-            'name' => 'required',
-            'password' => 'required',
-        ]);
+    public function test(){
+        return response('ok', 200);
+    }
 
-        $user = User::firstOrCreate([
+    public function register(Request $request){
+//        $request->validate([
+//            'email' => 'required|unique:users|max:255',
+//            'name' => 'required',
+//            'password' => 'required',
+//        ]);
+
+//        $user = User::create($request->validated());
+//        return response($user, 201);
+        $user =  User::create([
             'email' => $request->email,
             'name' => $request->name,
             'password' => Hash::make($request->password),
             ]);
-        if ($user){
-            return response('created', 201);
-        }else {
-            return response('failed', 500);
-        }
+        return response('created', 201);
+        //return response();
+//
+//        if ($user){
+//            return response('created', 201);
+//        } else {
+//            return response('failed', 500);
+//        }
     }
 
     public function login(Request $request){
@@ -41,6 +50,7 @@ class UserController extends Controller
             return response('bad', 400);
         }
     }
+
 
 
 }
