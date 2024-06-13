@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -51,6 +52,28 @@ class UserController extends Controller
         }
     }
 
+    public function editUser(Request $request){
+       // $user = Auth::user(); // будет так в будущем
 
+        $validated = $request->validate(['id'=>'required']);
+        $user = User::findOrFail($request->id);
+
+        if ($request->filled('city')) {
+            $user->city = $request->input('city');
+        }
+        if ($request->filled('avatar')) {
+            $user->avatar = $request->input('avatar');
+        }
+        if ($request->filled('telegram')) {
+            $user->telegram = $request->input('telegram');
+        }
+        if ($request->filled('instagram')) {
+            $user->instagram = $request->input('instagram');
+        }
+
+        $user->save();
+
+        return response()->json($user);
+    }
 
 }
