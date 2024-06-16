@@ -9,8 +9,14 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
+Route::post('/login', [UserController::class, 'login']);
+
 Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/test', [UserController::class, 'test']);
 
-Route::post('/profile', [UserController::class, 'editUser']);
+Route::post('/profile', [UserController::class, 'editUser'])->middleware('auth:sanctum');
+
+Route::get('/testAuth', [UserController::class, 'testAuth'])->middleware('auth:sanctum');
+
+Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');

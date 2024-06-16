@@ -13,51 +13,58 @@ class UserController extends Controller
         return response('ok', 200);
     }
 
-    public function register(Request $request){
-//        $request->validate([
-//            'email' => 'required|unique:users|max:255',
-//            'name' => 'required',
-//            'password' => 'required',
-//        ]);
+    public function testAuth(){
+       $authorized = auth('sanctum')->check();
 
-//        $user = User::create($request->validated());
-//        return response($user, 201);
+       $user = Auth::user();
+       if($authorized){
+           return response($user->name, 200);
+       } else{
+           return response('unauthorized error testAuth', 401);
+       }
+    }
+
+    public function register(Request $request){
         $user =  User::create([
             'email' => $request->email,
             'name' => $request->name,
             'password' => Hash::make($request->password),
             ]);
-        return response('created', 201);
-        //return response();
-//
-//        if ($user){
-//            return response('created', 201);
-//        } else {
-//            return response('failed', 500);
-//        }
+
+        $success['token'] = $user->createToken('MyApp')->plainTextToken;
+        $success['name'] = $user->name;
+        $success['response'] = 'created';
+        return response($success, 201);
     }
 
+
     public function login(Request $request){
-        $validated = $request->validate([
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
+            $user = Auth::user();
+            $success['token'] =  $user->createToken('MyApp')->plainTextToken;
+            $success['name'] =  $user->name;
 
-        $user = User::where('name','=',$request->username)->where('password','=',Hash::make($request->password))->first();
-
-        if ($user){
-            return response('good', 200);
-        } else {
-            return response('bad', 400);
+            return response($success, 200);
+        }
+        else{
+            return response('Unauthorized error', 401);
         }
     }
 
+    public function logout(Request $request){
+        Auth::user()->tokens()->delete();
+        //auth()->user()->tokens()->delete();
+        return [
+            'message' => 'user logged out'
+        ];
+    }
+
     public function editUser(Request $request){
-       // $user = Auth::user(); // будет так в будущем
+        $user = Auth::user();
 
-        $validated = $request->validate(['id'=>'required']);
-        $user = User::findOrFail($request->id);
-
+        if ($request->filled('name')) {
+            $user->name = $request->input('name');
+        }
         if ($request->filled('city')) {
             $user->city = $request->input('city');
         }
