@@ -83,4 +83,15 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function showUser(Request $request)
+    {
+        $user = Auth::user();
+
+        unset($user->password);
+        unset($user->email_verified_at);
+        unset($user->created_at);
+        unset($user->updated_at);
+
+        return response()->json($user);
+    }
 }
