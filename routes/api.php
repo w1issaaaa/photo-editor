@@ -22,3 +22,5 @@ Route::get('/profile', [UserController::class, 'showUser'])->middleware('auth:sa
 Route::get('/testAuth', [UserController::class, 'testAuth'])->middleware('auth:sanctum');
 
 Route::post('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::post('/editDescription', [UserController::class, 'editDescription'])->middleware('auth:sanctum');

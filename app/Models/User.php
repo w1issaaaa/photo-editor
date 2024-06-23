@@ -26,7 +26,8 @@ class User extends Authenticatable
         'avatar',
         'city',
         'telegram',
-        'instagram'
+        'instagram',
+        'description'
     ];
 
     /**

@@ -83,6 +83,17 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    public function editDescription(Request $request){
+        $user = Auth::user();
+
+        if ($request->filled('description')) {
+            $user->description = $request->input('description');
+        }
+
+        $user->save();
+        return response()->json($user);
+    }
+
     public function showUser(Request $request)
     {
         $user = Auth::user();
