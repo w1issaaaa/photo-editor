@@ -17,7 +17,7 @@ Route::get('/test', [UserController::class, 'test']);
 
 Route::post('/profile', [UserController::class, 'editUser'])->middleware('auth:sanctum');
 
-Route::get('/profile', [UserController::class, 'showUser'])->middleware('auth:sanctum');
+Route::get('/profile', [UserController::class, 'showUser']);
 
 Route::get('/testAuth', [UserController::class, 'testAuth'])->middleware('auth:sanctum');
 

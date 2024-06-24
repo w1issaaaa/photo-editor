@@ -43,6 +43,7 @@ class UserController extends Controller
             $user = Auth::user();
             $success['token'] =  $user->createToken('MyApp')->plainTextToken;
             $success['name'] =  $user->name;
+            $success['id'] =  $user->id;
 
             return response($success, 200);
         }
@@ -96,13 +97,18 @@ class UserController extends Controller
 
     public function showUser(Request $request)
     {
-        $user = Auth::user();
+        $validated  = $request->validate(['id' => 'required|exists:users,id']);
+        $user  = User::where('id', $validated['id'])->first();
+        if ($user !== null) {
+            unset($user->password);
+            unset($user->email_verified_at);
+            unset($user->created_at);
+            unset($user->updated_at);
 
-        unset($user->password);
-        unset($user->email_verified_at);
-        unset($user->created_at);
-        unset($user->updated_at);
+            return response()->json($user);
+        } else {
+            return response('User not found', 404);
+        }
 
-        return response()->json($user);
     }
 }
