@@ -34,6 +34,7 @@ class UserController extends Controller
         $success['token'] = $user->createToken('MyApp')->plainTextToken;
         $success['name'] = $user->name;
         $success['response'] = 'created';
+        $success['id'] = $user->id;
         return response($success, 201);
     }
 
